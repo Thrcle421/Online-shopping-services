@@ -9,10 +9,14 @@ import com.hmall.item.domain.dto.OrderDetailDTO;
 import com.hmall.item.domain.po.Item;
 import com.hmall.item.mapper.ItemMapper;
 import com.hmall.item.service.IItemService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -22,9 +26,14 @@ import java.util.List;
  * @author 虎哥
  */
 @Service
+@AllArgsConstructor
+@Slf4j
 public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements IItemService {
 
+    private final ItemMapper itemMapper;
+
     @Override
+    @Transactional
     public void deductStock(List<OrderDetailDTO> items) {
         String sqlStatement = "com.hmall.item.mapper.ItemMapper.updateStock";
         boolean r = false;
@@ -37,6 +46,23 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements II
             throw new BizIllegalException("库存不足！");
         }
     }
+
+
+//        try {
+//            // Adjust the lambda to not return any value
+//            executeBatch(items, (sqlSession, entity) -> {
+//                int updatedRows = sqlSession.update(sqlStatement, entity);
+//                if (updatedRows == 0) {
+//                    throw new BizIllegalException("库存不足，更新失败！ItemId: " + entity.getItemId());
+//                }
+//                sqlSession.commit();
+//            });
+//        } catch (Exception e) {
+//            throw new BizIllegalException("更新库存异常，请检查库存或数据！", e);
+//        }
+
+
+
 
     @Override
     public List<ItemDTO> queryItemByIds(Collection<Long> ids) {

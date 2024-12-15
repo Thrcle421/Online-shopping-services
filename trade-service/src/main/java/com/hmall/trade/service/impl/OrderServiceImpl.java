@@ -13,6 +13,7 @@ import com.hmall.trade.domain.po.OrderDetail;
 import com.hmall.trade.mapper.OrderMapper;
 import com.hmall.trade.service.IOrderDetailService;
 import com.hmall.trade.service.IOrderService;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final CartClient cartClient;
 
     @Override
-    @Transactional
+    @GlobalTransactional
     public Long createOrder(OrderFormDTO orderFormDTO) {
         // 1.订单数据
         Order order = new Order();
@@ -78,8 +79,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         // 4.扣减库存
         try {
+            System.out.println("尝试扣减库存...");
             itemClient.deductStock(detailDTOS);
+            System.out.println("库存扣减成功。");
         } catch (Exception e) {
+            System.err.println("库存扣减失败: " + e.getMessage());
             throw new RuntimeException("库存不足！");
         }
         return order.getId();
