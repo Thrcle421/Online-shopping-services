@@ -5,6 +5,8 @@ It uses Nacos to implement service governance, uses OpenFeign to implement remot
 
 It uses sentinel to complete microservice protection and uses Seata to complete distributed transactions.
 
+It uses RabbitMQ to complete asynchronous calls to update order status and cancel timed out orders.
+
 ## Split microservices
 
 This project splits the online shopping service into 5 microservices:
