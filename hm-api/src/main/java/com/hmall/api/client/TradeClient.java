@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.PutMapping;
 public interface TradeClient {
 
     @PutMapping("/{orderId}")
-    public void markOrderPaySuccess(@PathVariable("orderId") Long orderId);
+    void markOrderPaySuccess(@PathVariable("orderId") Long orderId);
 }

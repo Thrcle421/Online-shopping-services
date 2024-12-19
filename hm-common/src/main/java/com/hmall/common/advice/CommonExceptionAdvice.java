@@ -66,3 +66,4 @@ public class CommonExceptionAdvice {
         return ResponseEntity.status(e.getCode()).body(R.error(e));
     }
 }
+

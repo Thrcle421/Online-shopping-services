@@ -47,25 +47,22 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements II
         }
     }
 
-
-//        try {
-//            // Adjust the lambda to not return any value
-//            executeBatch(items, (sqlSession, entity) -> {
-//                int updatedRows = sqlSession.update(sqlStatement, entity);
-//                if (updatedRows == 0) {
-//                    throw new BizIllegalException("库存不足，更新失败！ItemId: " + entity.getItemId());
-//                }
-//                sqlSession.commit();
-//            });
-//        } catch (Exception e) {
-//            throw new BizIllegalException("更新库存异常，请检查库存或数据！", e);
-//        }
-
-
-
-
     @Override
     public List<ItemDTO> queryItemByIds(Collection<Long> ids) {
         return BeanUtils.copyList(listByIds(ids), ItemDTO.class);
+    }
+
+    @Override
+    public void restoreStock(List<OrderDetailDTO> items) {
+        String sqlStatement = "com.hmall.item.mapper.ItemMapper.restoreStock";
+        boolean r = false;
+        try {
+            r = executeBatch(items, (sqlSession, entity) -> sqlSession.update(sqlStatement, entity));
+        } catch (Exception e) {
+            throw new BizIllegalException("更新库存异常，可能是库存不足!", e);
+        }
+        if (!r) {
+            throw new BizIllegalException("库存不足！");
+        }
     }
 }

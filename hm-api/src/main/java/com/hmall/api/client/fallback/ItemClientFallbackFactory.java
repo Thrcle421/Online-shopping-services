@@ -28,6 +28,12 @@ public class ItemClientFallbackFactory implements FallbackFactory<ItemClient> {
                 log.error("deductStock called",cause);
                 throw new RuntimeException(cause);
             }
+
+            @Override
+            public void restoreStock(List<OrderDetailDTO> items) {
+                log.error("restoreStock called",cause);
+                throw new RuntimeException(cause);
+            }
         };
     }
 }
